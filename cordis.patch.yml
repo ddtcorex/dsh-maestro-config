@@ -1,0 +1,6 @@
+# dsh-maestro-config bundle patch: publishes the maestroConfig service over the
+# shared namespaced settings store and exposes loopback RPC for future clients.
+- insert:
+    - id: maestro-config
+      name: '@ddtcorex/dsh-maestro-config'
+      config: {}
