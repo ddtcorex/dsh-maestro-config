@@ -7,6 +7,10 @@
   "types": "./lib/index.d.ts",
   "exports": {
     ".": "./lib/index.js",
+    "./client": {
+      "types": "./lib/types/client/index.d.ts",
+      "default": "./lib/client.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [
