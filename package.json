@@ -1,7 +1,7 @@
 {
   "name": "@ddtcorex/dsh-maestro-config",
   "version": "0.1.0",
-  "description": "Maestro Config — shared settings service for the dsh-maestro-* suite over the single namespaced store (~/.dsh/maestro/settings.json)",
+  "description": "Maestro Config \u2014 shared settings service for the dsh-maestro-* suite over the single namespaced store (~/.dsh/maestro/settings.json)",
   "type": "module",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -42,7 +42,7 @@
     "@deepseek-ai/dsh-host-apiproxy": "0.1.0-rc.8"
   },
   "dependencies": {
-    "@ddtcorex/dsh-maestro-config-lib": "link:../dsh-maestro-config-lib"
+    "@ddtcorex/dsh-maestro-config-lib": "workspace:^0.1.0"
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "^4.0.1",

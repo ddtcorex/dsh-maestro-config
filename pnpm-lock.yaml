@@ -9,7 +9,7 @@ importers:
   .:
     dependencies:
       '@ddtcorex/dsh-maestro-config-lib':
-        specifier: link:../dsh-maestro-config-lib
+        specifier: workspace:^0.1.0
         version: link:../dsh-maestro-config-lib
     devDependencies:
       '@deepseek-ai/cordis':
@@ -39,6 +39,18 @@ importers:
       qrcode:
         specifier: ^1.5.4
         version: 1.5.4
+      typescript:
+        specifier: ^5.8.0
+        version: 5.9.3
+      vitest:
+        specifier: ^2.0.0
+        version: 2.1.9(@types/node@22.20.1)
+
+  ../dsh-maestro-config-lib:
+    devDependencies:
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.20.1
       typescript:
         specifier: ^5.8.0
         version: 5.9.3
