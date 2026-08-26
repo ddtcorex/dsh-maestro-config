@@ -37,11 +37,14 @@
       ]
     },
     "allowImportingTsExtensions": true,
-    "rewriteRelativeImportExtensions": true
+    "rewriteRelativeImportExtensions": true,
+    "allowJs": true,
+    "checkJs": false
   },
   "include": [
     "src/client/**/*.ts",
-    "src/client/**/*.tsx"
+    "src/client/**/*.tsx",
+    "src/client/**/*.jsx"
   ],
   "exclude": [
     "lib",
