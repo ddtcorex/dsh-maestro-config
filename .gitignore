@@ -5,3 +5,6 @@ lib/
 # agent rulebooks are source, not artifacts (global excludes ignores them)
 !AGENTS.md
 !CLAUDE.md
+
+# tsc client emit dir (legacy pipeline artifact; esbuild reads src directly)
+.client-build/
