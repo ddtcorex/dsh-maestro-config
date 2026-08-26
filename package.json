@@ -1,7 +1,7 @@
 {
   "name": "@ddtcorex/dsh-maestro-config",
   "version": "0.1.0",
-  "description": "Maestro Config \u2014 shared settings service for the dsh-maestro-* suite over the single namespaced store (~/.dsh/maestro/settings.json)",
+  "description": "Maestro Config — shared settings service for the dsh-maestro-* suite over the single namespaced store (~/.dsh/maestro/settings.json)",
   "type": "module",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -47,11 +47,19 @@
   "devDependencies": {
     "@deepseek-ai/cordis": "^4.0.1",
     "@deepseek-ai/dsh-client-connection": "0.1.0-rc.8",
-    "typescript": "^5.8.0",
-    "vitest": "^2.0.0",
-    "@types/node": "^22.0.0",
     "@deepseek-ai/dsh-host-apiproxy": "0.1.0-rc.8",
+    "@types/node": "^22.0.0",
+    "@types/qrcode": "^1.5.6",
     "@types/react": "~18.3.1",
-    "@types/react-dom": "~18.3.0"
+    "@types/react-dom": "~18.3.0",
+    "esbuild": "^0.25.12",
+    "qrcode": "^1.5.4",
+    "typescript": "^5.8.0",
+    "vitest": "^2.0.0"
+  },
+  "devDeps": {
+    "esbuild": "^0.25.0",
+    "qrcode": "^1.5.4",
+    "@types/qrcode": "^1.5.5"
   }
 }
