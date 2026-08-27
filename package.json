@@ -1,6 +1,8 @@
 {
   "name": "@ddtcorex/dsh-maestro-config",
   "version": "0.1.0",
+  "private": false,
+  "packageManager": "pnpm@11.7.0",
   "description": "Maestro Config \u2014 shared settings service for the dsh-maestro-* suite over the single namespaced store (~/.dsh/maestro/settings.json)",
   "type": "module",
   "main": "./lib/index.js",
