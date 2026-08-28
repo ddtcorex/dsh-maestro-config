@@ -1,6 +1,6 @@
 import type {} from '@deepseek-ai/dsh-client-connection'
 import type { Context } from '@deepseek-ai/cordis'
-import type { RpcErrorDetailsMap, RpcResult } from '@deepseek-ai/dsh-host-apiproxy/api'
+import type { RpcErrorDetailsMap, RpcResult } from '@deepseek-ai/dsh-client-connection'
 import { createMaestroConfigService, type MaestroConfigService } from './service.ts'
 
 export const name = 'maestro-config'
