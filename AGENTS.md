@@ -16,6 +16,7 @@ schema-driven Settings card later.
 ## Rules
 
 - Default branch `master`; no direct commits — use `feat/<topic>` PRs.
+- Always request approval before merge or release: no `git tag v*` / `pnpm publish` / `gh release` or PR merge without explicit human `APPROVED` (see workspace `AGENTS.md` Git Rules).
 - Conventional commits, imperative mood. One TDD task = one commit; never commit red.
 - RPC results must be `RpcResult` (`ok/fail` helpers); `fail()` mirrors harness's synthetic bad-request details.
 - Domain schemas are registered by OWNER plugins via the lib's `defineDomain`; this plugin never hardcodes domain keys.
