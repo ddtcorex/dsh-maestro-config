@@ -1,0 +1,1 @@
+{"version":3,"file":"Settings.d.ts","sourceRoot":"","sources":["../../../src/client/Settings.tsx"],"names":[],"mappings":"AAIA,KAAK,OAAO,GAAG,CAAC,QAAQ,EAAE,MAAM,EAAE,OAAO,CAAC,EAAE,OAAO,EAAE,MAAM,CAAC,EAAE,WAAW,KAAK,OAAO,CAAC,OAAO,CAAC,CAAA;AAiF9F,wBAAgB,QAAQ,CAAC,EAAE,aAAa,EAAE,EAAE;IAAE,aAAa,EAAE,OAAO,CAAA;CAAE;;;;;gBAiRrE;AAGD,eAAe,QAAQ,CAAA"}
