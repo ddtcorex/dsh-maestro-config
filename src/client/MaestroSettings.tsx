@@ -1057,7 +1057,7 @@ function NamedTunnelSetupNote() {
 // ---------------------------------------------------------------------------
 // Main — DSH-native grouped settings (DisclosureRow per domain)
 // ---------------------------------------------------------------------------
-export function MaestroSettingsTab({ rpcCall, configRpcCall }: { rpcCall: any; configRpcCall?: any }) {
+export function MaestroSettingsTab({ rpcCall, configRpcCall, guardRpcCall }: { rpcCall: any; configRpcCall?: any; guardRpcCall?: any }) {
   const [status, setStatus] = useState<any>(null)
   const [proxyStatus, setProxyStatus] = useState<any>(null)
   const [config, setConfig] = useState<any>({ tunnelMode: 'quick', projectMappings: [] })
@@ -1074,6 +1074,7 @@ export function MaestroSettingsTab({ rpcCall, configRpcCall }: { rpcCall: any; c
   const [placeholdersText, setPlaceholdersText] = useState('')
   const [supervisorCfg, setSupervisorCfg] = useState<any>({})
   const [notifierCfg, setNotifierCfg] = useState<any>({})
+  const [guardApprovals, setGuardApprovals] = useState<any>({ requests: [], grants: {} })
   const [activeTab, setActiveTab] = useState('tunnel')
   // Mobile: inject responsive overrides once (mirrors dsh-maestro-mobile settings-sheet pill pattern + market catsWrap)
   useEffect(() => {
@@ -1207,6 +1208,45 @@ export function MaestroSettingsTab({ rpcCall, configRpcCall }: { rpcCall: any; c
       setError(e.message ?? String(e))
     }
   }
+  const guardCall = async (endpoint: string, payload?: unknown) => {
+    if (!guardRpcCall) return null
+    const res = await guardRpcCall(endpoint, payload)
+    return unwrap(res)
+  }
+  const refreshGuard = async () => {
+    if (!guardRpcCall) return
+    try {
+      const data = await guardCall('list')
+      if (data) setGuardApprovals(data)
+    } catch {}
+  }
+  const approveRequest = async (id: string) => {
+    setError(null)
+    try {
+      await guardCall('approve', { id })
+      await refreshGuard()
+    } catch (e: any) {
+      setError(e.message ?? String(e))
+    }
+  }
+  const dismissRequest = async (id: string) => {
+    setError(null)
+    try {
+      await guardCall('dismiss', { id })
+      await refreshGuard()
+    } catch (e: any) {
+      setError(e.message ?? String(e))
+    }
+  }
+  const revokeGrant = async (scope: string) => {
+    setError(null)
+    try {
+      await guardCall('revoke', { scope })
+      await refreshGuard()
+    } catch (e: any) {
+      setError(e.message ?? String(e))
+    }
+  }
   const refresh = async () => {
     try {
       setStatus(await call(MAESTRO_ENDPOINTS.status, {}))
@@ -1252,6 +1292,12 @@ export function MaestroSettingsTab({ rpcCall, configRpcCall }: { rpcCall: any; c
     const t = setInterval(refresh, 3000)
     return () => clearInterval(t)
   }, [])
+  useEffect(() => {
+    if (activeTab !== 'guard') return
+    refreshGuard()
+    const t = setInterval(refreshGuard, 3000)
+    return () => clearInterval(t)
+  }, [activeTab])
   const revealPin = async () => {
     if (pin === null) {
       try {
@@ -1405,6 +1451,39 @@ export function MaestroSettingsTab({ rpcCall, configRpcCall }: { rpcCall: any; c
         h(SettingRow as any, { title: 'Protected branches', description: 'Comma-separated list, e.g. master, main.', control: h(FieldInput as any, { value: (guard.gitProtection?.branches ?? ['master', 'main']).join(', '), placeholder: 'master, main', onChange: (e: any) => saveGuard({ gitProtection: { enabled: guard.gitProtection?.enabled ?? true, branches: e.target.value.split(',').map((s: any) => s.trim()).filter(Boolean) } }), style: { width: 260 } as any }) }),
         h(ToggleRow as any, { title: 'Contain working directory', description: 'Restrict file operations to the session working directory.', checked: guard.cwdContainment === true, onChange: (v: boolean) => saveGuard({ cwdContainment: v }) }),
         h(SettingRow as any, { title: 'Credential file paths', description: 'Comma-separated paths to credential files.', control: h(FieldInput as any, { value: (guard.credentialPaths ?? []).join(', '), placeholder: '~/.config/credentials.yaml', onChange: (e: any) => saveGuard({ credentialPaths: e.target.value.split(',').map((s: any) => s.trim()).filter(Boolean) }), style: { width: 260 } as any }) }),
+        h('div', { style: { borderTop: `1px solid ${t.borderL2}`, marginTop: 4, paddingTop: 12, display: 'flex', flexDirection: 'column', gap: 8 } },
+          h('div', { style: { fontSize: 13, fontWeight: 600, color: t.labelPrimary as string } }, 'Approval requests'),
+          (guardApprovals.requests ?? []).length === 0
+            ? h('p', { style: captionStyle }, 'No blocked operations awaiting approval.')
+            : (guardApprovals.requests as any[]).map((r: any) =>
+                h('div', { key: r.id, 'data-guard-request': r.id, style: { ...cardInsetStyle, padding: 10, display: 'flex', flexDirection: 'column', gap: 6 } },
+                  h('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 } },
+                    h('span', { style: { fontSize: 12, fontWeight: 600, color: t.labelSecondary as string, fontFamily: 'ui-monospace, monospace' } }, r.scope),
+                    h('span', { style: { fontSize: 11, color: t.labelTertiary as string } }, `${String(r.sessionId ?? '—').slice(0, 28)} · ${new Date(r.requestedAt).toLocaleTimeString()}`),
+                  ),
+                  h('div', { style: { fontFamily: 'ui-monospace, monospace', fontSize: 11, color: t.labelPrimary as string, wordBreak: 'break-all' as any, padding: '6px 8px', borderRadius: 6, background: t.bgLayer3 as string, border: `1px solid ${t.borderL2}` } }, String(r.command ?? r.reason ?? '')),
+                  h('div', { style: { display: 'flex', gap: 8 } },
+                    h(Button as any, { variant: 'primary', size: 'sm', 'data-guard-approve': r.id, onClick: () => approveRequest(r.id) }, 'Approve'),
+                    h(Button as any, { variant: 'outline', size: 'sm', 'data-guard-dismiss': r.id, onClick: () => dismissRequest(r.id) }, 'Dismiss'),
+                  ),
+                ),
+              ),
+        ),
+        h('div', { style: { borderTop: `1px solid ${t.borderL2}`, paddingTop: 12, display: 'flex', flexDirection: 'column', gap: 8 } },
+          h('div', { style: { fontSize: 13, fontWeight: 600, color: t.labelPrimary as string } }, 'Active grants'),
+          (() => {
+            const grants = (guardApprovals.grants ?? {}) as Record<string, boolean>
+            const scopes = Object.keys(grants).filter((k) => grants[k] === true)
+            return scopes.length === 0
+              ? h('p', { style: captionStyle }, 'No active grants.')
+              : scopes.map((s) =>
+                  h('div', { key: s, 'data-guard-grant': s, style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 } },
+                    h('span', { style: { fontSize: 12, color: t.labelPrimary as string, fontFamily: 'ui-monospace, monospace' } }, s),
+                    h(Button as any, { variant: 'outline', size: 'sm', 'data-guard-revoke': s, onClick: () => revokeGrant(s) }, 'Revoke'),
+                  ),
+                )
+          })(),
+        ),
       ),
     blacklist: h(
         'div',

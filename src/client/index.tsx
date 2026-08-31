@@ -78,6 +78,14 @@ export function apply(ctx: ClientCtx): void {
     if (!connection?.rpc?.call) return Promise.reject(new Error('RPC not available'))
     return connection.rpc.call('/dsh-maestro-config', endpoint, payload, signal)
   }
+  // Guard approvals RPC (dsh-maestro-guard row) — absent gracefully when the row is not installed
+  const guardRpcCall: RpcCall = (endpoint, payload, signal) => {
+    const connection = ctx.get?.('connection') as
+      | { rpc: { call(ch: string, ep: string, p?: unknown, s?: AbortSignal): Promise<unknown> } }
+      | undefined
+    if (!connection?.rpc?.call) return Promise.reject(new Error('RPC not available'))
+    return connection.rpc.call('/dsh-maestro-guard', endpoint, payload, signal)
+  }
 
   // Reversible effects: nav-row marker observer + owned style tag.
   ctx.effect(() => registerSettingsNavIcon(() => 'Maestro'), 'maestro: settings nav icon')
@@ -85,7 +93,7 @@ export function apply(ctx: ClientCtx): void {
 
   slots.inject('settings.section', () =>
     slots.register(
-      { name: 'settings.section', id: 'maestro', order: 25, label: () => 'Maestro', inject: () => ({ rpcCall, configRpcCall }) },
+      { name: 'settings.section', id: 'maestro', order: 25, label: () => 'Maestro', inject: () => ({ rpcCall, configRpcCall, guardRpcCall }) },
       MaestroSettingsTab as unknown as (props: { rpcCall: RpcCall }) => unknown,
     ),
   )

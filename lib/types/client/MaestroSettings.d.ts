@@ -7,9 +7,10 @@
  *  - DisclosureRow (24px row, 14px glyph, chevron hover) — same as primitives/DisclosureRow
  *  - Panel chroma: inner cards use bg-layer-2 / border-l2 / radius 12 / shadow lv3 where needed
  */
-export declare function MaestroSettingsTab({ rpcCall, configRpcCall }: {
+export declare function MaestroSettingsTab({ rpcCall, configRpcCall, guardRpcCall }: {
     rpcCall: any;
     configRpcCall?: any;
+    guardRpcCall?: any;
 }): import("react").DetailedReactHTMLElement<{
     'data-maestro-settings-card': string;
     style: {
