@@ -4,6 +4,21 @@ All notable changes to this project are documented in this file. Format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); this project uses
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-09-02
+
+### Added
+
+- **Row-based mappings editor** — replace placeholder JSON editor with row-based mappings UI for better UX.
+
+### Fixed
+
+- **Maestro Access redesign + mobile friendly** (#33).
+
+### Changed
+
+- Refresh client type map for mappings editor.
+
+
 ## [0.1.1] - 2026-08-28
 
 Supervisor model support on the Settings card.
