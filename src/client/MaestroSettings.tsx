@@ -533,14 +533,15 @@ function ReviewModelSelector({
     position: 'absolute',
     top: 'calc(100% + 8px)',
     left: '0',
-    minWidth: '300px',
-    maxWidth: '360px',
+    minWidth: 'min(300px, calc(100vw - 32px))',
+    maxWidth: 'min(360px, calc(100vw - 24px))',
     background: t.bgLayer2 as string,
     border: `1px solid ${t.borderL2}`,
     borderRadius: '12px',
     boxShadow: t.shadowLv3 as string,
     zIndex: '20',
     padding: '6px',
+    boxSizing: 'border-box' as string,
   }
   const rowStyle: Record<string, any> = {
     width: '100%',
@@ -567,7 +568,7 @@ function ReviewModelSelector({
   const modelLabel = selectedProvider === '' ? 'Select model' : (value?.model ?? 'Select model')
   return h(
     'div',
-    { ref: rootRef as any, 'data-maestro-trigger-wrap': '', style: { position: 'relative', display: 'inline-block', maxWidth: '100%' } },
+    { ref: rootRef as any, 'data-maestro-trigger-wrap': '', style: { position: 'relative', display: 'inline-block', maxWidth: '100%', minWidth: 0, boxSizing: 'border-box' as string } },
     label ? h('span', { style: fieldLabelStyle }, label) : null,
     h(
       'button',
@@ -586,8 +587,10 @@ function ReviewModelSelector({
           alignItems: 'center',
           gap: 8,
           cursor: 'pointer',
-          maxWidth: 320,
+          maxWidth: 'min(320px, 100%)',
+          minWidth: 0,
           whiteSpace: 'nowrap',
+          boxSizing: 'border-box' as string,
         },
         onClick: () => {
           setOpen((v) => !v)
@@ -1156,6 +1159,10 @@ export function MaestroSettingsTab({ rpcCall, configRpcCall }: { rpcCall: any; c
   // Mobile: inject responsive overrides once (mirrors dsh-maestro-mobile settings-sheet pill pattern + market catsWrap)
   useEffect(() => {
     const css = `
+      /* Model override dropdown — prevent right-edge overlap */
+      [data-maestro-control] [data-maestro-menu] { left:auto !important; right:0 !important; }
+      [data-maestro-project-card] [data-maestro-menu] { left:auto !important; right:0 !important; }
+      [data-maestro-trigger-wrap] { min-width:0; }
       /* Maestro nested tabs — market-like pill bar + mobile fixes */
       [data-maestro-tabs] { display:flex; gap:6px; overflow-x:auto; overflow-y:hidden; scrollbar-width:none; -webkit-overflow-scrolling:touch; overscroll-behavior-x:contain; touch-action:pan-x; padding-bottom:6px; margin-bottom:10px; border-bottom:1px solid var(--dsw-alias-border-l1, rgba(0,0,0,.08)); }
       [data-maestro-tabs]::-webkit-scrollbar { display:none; width:0; height:0; }
@@ -1178,6 +1185,8 @@ export function MaestroSettingsTab({ rpcCall, configRpcCall }: { rpcCall: any; c
         [data-maestro-qr-row] { flex-direction:column !important; align-items:flex-start !important; }
         [data-maestro-trigger-wrap] { max-width:100% !important; }
         [data-maestro-menu] { min-width:0 !important; max-width:calc(100vw - 32px) !important; left:0 !important; right:auto !important; }
+        [data-maestro-control] [data-maestro-menu] { left:0 !important; right:auto !important; }
+        [data-maestro-project-card] [data-maestro-menu] { left:0 !important; right:auto !important; }
         [data-maestro-panel] label { gap:8px !important; }
         div[data-maestro-row] { flex-direction:column !important; align-items:stretch !important; padding:12px 0 !important; }
         [data-maestro-row-text] { padding-right:0 !important; }
