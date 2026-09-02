@@ -1124,39 +1124,96 @@ function PlaceholderMappingsEditor({ rows, onChange }: { rows: { pattern: string
         )
       : h(
           'div',
-          { 'data-maestro-placeholders-list': '', style: { display: 'flex', flexDirection: 'column', gap: 8 } },
+          { 'data-maestro-placeholders-list': '', style: { display: 'flex', flexDirection: 'column', gap: 12 } },
           ...rows.map((row, i) =>
             h(
               'div',
               {
                 key: i,
-                'data-maestro-mapping-row': '',
-                style: { display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' as const },
+                'data-maestro-mapping-card': '',
+                style: {
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 12,
+                  padding: 12,
+                  borderRadius: 12,
+                  border: `1px solid ${t.borderL2}`,
+                  background: t.bgLayer1 as string,
+                  boxSizing: 'border-box' as const,
+                },
               },
-              h('div', { 'data-maestro-mapping-field': '', style: { flex: '1 1 200px', minWidth: 0, display: 'flex', flexDirection: 'column', gap: 4 } },
-                h('span', { 'data-maestro-mapping-label': '', style: { fontSize: 11, fontWeight: 600, letterSpacing: '0.04em', textTransform: 'uppercase' as const, color: t.labelTertiary as string, lineHeight: '14px' } }, 'Blocked pattern'),
-                h(FieldInput as any, {
-                  value: row.pattern,
-                  placeholder: 'example-project',
-                  onChange: (e: any) => updateRow(i, 'pattern', e.target.value),
-                  'aria-label': `Blocked pattern ${i + 1}`,
-                  style: { width: '100%', minWidth: 0 } as any,
-                }),
-              ),
-              h('span', { 'data-maestro-mapping-arrow': 'h', 'aria-hidden': true, style: { color: t.labelTertiary as string, flex: 'none', fontSize: 14, lineHeight: '20px' } }, '→'),
-              h('span', { 'data-maestro-mapping-arrow': 'v', 'aria-hidden': true, style: { color: t.labelTertiary as string, fontSize: 14, lineHeight: '14px', textAlign: 'center' as const } }, '↓'),
-              h('div', { 'data-maestro-mapping-field': '', style: { flex: '1 1 200px', minWidth: 0, display: 'flex', flexDirection: 'column', gap: 4 } },
-                h('span', { 'data-maestro-mapping-label': '', style: { fontSize: 11, fontWeight: 600, letterSpacing: '0.04em', textTransform: 'uppercase' as const, color: t.labelTertiary as string, lineHeight: '14px' } }, 'Placeholder'),
-                h(FieldInput as any, {
-                  value: row.suggestion,
-                  placeholder: 'my-project',
-                  onChange: (e: any) => updateRow(i, 'suggestion', e.target.value),
-                  'aria-label': `Placeholder suggestion ${i + 1}`,
-                  style: { width: '100%', minWidth: 0 } as any,
-                }),
-              ),
-              h('div', { 'data-maestro-mapping-remove': '', style: { flex: 'none' } },
+              // Card header: index badge + preview + X (same as Review's project card header)
+              h(
+                'div',
+                { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 } },
+                h(
+                  'div',
+                  { style: { display: 'flex', alignItems: 'center', gap: 8, minWidth: 0, flex: 1 } },
+                  h(
+                    'span',
+                    {
+                      style: {
+                        flex: 'none',
+                        width: 24,
+                        height: 24,
+                        borderRadius: 12,
+                        background: 'var(--dsw-alias-bg-module-platform, #F5F6F7)',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: 11,
+                        fontWeight: 600,
+                        color: t.labelSecondary as string,
+                      },
+                    },
+                    String(i + 1),
+                  ),
+                  h(
+                    'span',
+                    {
+                      style: {
+                        fontSize: 12,
+                        fontFamily: 'ui-monospace, monospace',
+                        color: row.pattern ? (t.labelPrimary as string) : (t.labelTertiary as string),
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        minWidth: 0,
+                      },
+                    },
+                    row.pattern ? (row.suggestion ? `${row.pattern} → ${row.suggestion}` : `${row.pattern} → …`) : 'New mapping',
+                  ),
+                ),
                 h(Button as any, { variant: 'outline', size: 'sm', onClick: () => removeRow(i), 'aria-label': `Remove mapping ${i + 1}`, title: 'Remove mapping' }, '✕'),
+              ),
+              // Fields grid — 2-col desktop, 1-col mobile (same as Review's project grid)
+              h(
+                'div',
+                { 'data-maestro-mapping-grid': '', style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 } },
+                h(
+                  'label',
+                  { style: fieldLabelStyle, 'data-maestro-field': '' },
+                  'Blocked pattern',
+                  h(FieldInput as any, {
+                    value: row.pattern,
+                    placeholder: 'example-project',
+                    onChange: (e: any) => updateRow(i, 'pattern', e.target.value),
+                    'aria-label': `Blocked pattern ${i + 1}`,
+                    style: { width: '100%' } as any,
+                  }),
+                ),
+                h(
+                  'label',
+                  { style: fieldLabelStyle, 'data-maestro-field': '' },
+                  'Placeholder',
+                  h(FieldInput as any, {
+                    value: row.suggestion,
+                    placeholder: 'my-project',
+                    onChange: (e: any) => updateRow(i, 'suggestion', e.target.value),
+                    'aria-label': `Placeholder suggestion ${i + 1}`,
+                    style: { width: '100%' } as any,
+                  }),
+                ),
               ),
             ),
           ),
@@ -1205,8 +1262,6 @@ export function MaestroSettingsTab({ rpcCall, configRpcCall }: { rpcCall: any; c
       /* label/input overlap fix: flex column gap + full width */
       [data-maestro-panel] label { gap:6px !important; }
       [data-maestro-row]:last-child { border-bottom:none !important; }
-      [data-maestro-mapping-label] { display: none; }
-      [data-maestro-mapping-arrow][data-maestro-mapping-arrow="v"] { display: none; }
       [data-maestro-panel] label > span { width:100% !important; box-sizing:border-box !important; }
       @media (prefers-reduced-motion: reduce) {
         [data-maestro-tab] { transition: none !important; }
@@ -1216,18 +1271,12 @@ export function MaestroSettingsTab({ rpcCall, configRpcCall }: { rpcCall: any; c
         [data-maestro-settings-card] { max-width:100% !important; gap:6px !important; padding:0 2px !important; }
         [data-maestro-tabs] { gap:6px !important; padding:2px 2px 8px !important; margin:0 -2px 8px !important; }
         [data-maestro-tab] { min-height:40px !important; height:auto !important; padding:0 12px !important; font-size:13px !important; }
-        /* Placeholder mappings — card per row on mobile (maestro-design: stacked fields, vertical arrow, full-width remove) */
+        /* Placeholder mappings — card design unified with Review project cards (header X, grid fields) */
         [data-maestro-placeholders-header] { flex-direction: column !important; align-items: stretch !important; }
         [data-maestro-placeholders-header] [data-maestro-placeholders-add] { width: 100% !important; justify-content: center !important; }
-        [data-maestro-placeholders-list] { gap: 10px !important; }
-        [data-maestro-mapping-row] { flex-direction:column !important; align-items:stretch !important; gap:6px !important; padding:12px !important; border:1px solid var(--dsw-alias-border-l1, rgba(0,0,0,.08)) !important; border-radius:12px !important; background:var(--dsw-alias-bg-layer-1) !important; }
-        [data-maestro-mapping-field] { flex: none !important; width: 100% !important; max-width: none !important; }
-        [data-maestro-mapping-label] { display: block !important; }
-        [data-maestro-mapping-arrow][data-maestro-mapping-arrow="h"] { display: none !important; }
-        [data-maestro-mapping-arrow][data-maestro-mapping-arrow="v"] { display: block !important; text-align: center !important; padding: 0 !important; }
-        [data-maestro-mapping-remove] { flex: none !important; width: 100% !important; align-self: stretch !important; padding: 0 !important; }
-        [data-maestro-mapping-remove] button { width: 100% !important; justify-content: center !important; min-height: 40px !important; }
-        [data-maestro-placeholders-empty] button { width: 100% !important; justify-content: center !important; }
+        [data-maestro-placeholders-list] { gap: 12px !important; }
+        [data-maestro-mapping-card] { padding:10px !important; }
+        [data-maestro-mapping-grid] { grid-template-columns:1fr !important; gap:12px !important; }
         [data-maestro-qr-row] { flex-direction:column !important; align-items:flex-start !important; }
         [data-maestro-trigger-wrap] { max-width:100% !important; }
         [data-maestro-menu] { min-width:0 !important; max-width:calc(100vw - 32px) !important; left:0 !important; right:auto !important; }
