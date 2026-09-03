@@ -31,7 +31,7 @@ describe('settings section registration contract', () => {
     // Regression pin: `value: config.hasGitlabToken ? '••••••••' : ''` locks a
     // controlled input to a constant string — keystrokes are swallowed and the
     // first change saves bullet-contaminated text. Secrets must use an empty
-    // draft committed on blur/Enter (SecretField / SecretInput).
+    // draft committed on blur/Enter (SecretField).
     expect(live).not.toMatch(/value:\s*config\.has\w+\s*\?\s*'•+/)
     expect(live).not.toMatch(/value:\s*notifierCfg\.telegram\?\.botToken/)
     expect(live).toContain('function SecretField')
@@ -40,13 +40,13 @@ describe('settings section registration contract', () => {
     expect(live).toContain("placeholder: '123456:ABC-DEF...'")
   })
 
-  it('keeps the legacy card visuals (alias tokens, masked secrets, sections)', () => {
-    const card = read('maestro-card.jsx')
+  it('keeps the card visuals (alias tokens, masked secrets, sections)', () => {
+    const card = read('MaestroSettings.tsx')
     expect(card).toContain('--dsw-alias-border-l2')
-    expect(card).toContain("--dsw-alias-bg-layer-3")
+    expect(card).toContain('--dsw-alias-bg-layer-3')
     expect(card).toContain("'password'")
-    expect(card).toContain('saved — leave blank to keep')
-    expect(card).toContain('Tracked projects')
+    expect(card).toContain('saved — type new value to replace')
+    expect(card).toContain('Projects —')
     // audio-lines glyph mask from the old bundle
     expect(card + entry).toContain('data:image/svg+xml')
     expect(read('settings-nav-icon.ts')).toContain('data-maestro-settings-nav')

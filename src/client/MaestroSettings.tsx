@@ -947,35 +947,6 @@ function ProjectMappingsEditor({ mappings, onChange, catalog, globalReviewModel 
   )
 }
 
-function SecretInput({ label, placeholder, hasSaved, onSave }: { label: string; placeholder: string; hasSaved?: boolean; onSave: (v: string) => void }) {
-  const [draft, setDraft] = useState('')
-  const clear = () => {
-    setDraft('')
-    onSave('')
-  }
-  return h(
-    'div',
-    null,
-    h('label', { style: fieldLabelStyle }, label),
-    h(
-      'div',
-      { style: { display: 'flex', gap: 8 } },
-      h(FieldInput as any, {
-        placeholder: hasSaved === true ? 'saved — leave blank to keep' : placeholder,
-        type: 'password',
-        autoComplete: 'off',
-        value: draft,
-        onChange: (e: any) => setDraft(e.target.value),
-        onBlur: () => {
-          if (draft !== '') onSave(draft)
-        },
-        style: { flex: 1 } as any,
-      }),
-      hasSaved === true ? h(Button as any, { variant: 'outline', size: 'sm', onClick: clear }, 'Clear') : null,
-    ),
-  )
-}
-
 // SecretField — control-sized secret input for SettingRow controls (no label).
 // The server never echoes secrets back (getConfig masks them to has* flags),
 // so the field stays EMPTY and commits a typed draft on blur / Enter; an
