@@ -26,6 +26,20 @@ describe('settings section registration contract', () => {
     expect(entry).toMatch(/ctx\.effect\([\s\S]*?registerSettingsNavIcon/)
   })
 
+  it('secret inputs never render mask bullets as the controlled value', () => {
+    const live = read('MaestroSettings.tsx')
+    // Regression pin: `value: config.hasGitlabToken ? '••••••••' : ''` locks a
+    // controlled input to a constant string — keystrokes are swallowed and the
+    // first change saves bullet-contaminated text. Secrets must use an empty
+    // draft committed on blur/Enter (SecretField / SecretInput).
+    expect(live).not.toMatch(/value:\s*config\.has\w+\s*\?\s*'•+/)
+    expect(live).not.toMatch(/value:\s*notifierCfg\.telegram\?\.botToken/)
+    expect(live).toContain('function SecretField')
+    expect(live).toContain("placeholder: 'GitLab token', hasSaved: config.hasGitlabToken")
+    expect(live).toContain("placeholder: 'Webhook secret', hasSaved: config.hasWebhookSecret")
+    expect(live).toContain("placeholder: '123456:ABC-DEF...'")
+  })
+
   it('keeps the legacy card visuals (alias tokens, masked secrets, sections)', () => {
     const card = read('maestro-card.jsx')
     expect(card).toContain('--dsw-alias-border-l2')
