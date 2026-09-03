@@ -4,6 +4,16 @@ All notable changes to this project are documented in this file. Format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); this project uses
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] - 2026-09-03
+
+### Removed
+
+- **Dead Supervisor model UI** — the Review-tab `Supervisor model` row and the
+  legacy card `Supervisor LLM` section (plus their dual-write paths to
+  `domains.supervisor.model`). The supervisor is deterministic without LLM,
+  so the setting had no effect. The Supervisor tab
+  (`intervalMs`/`downThreshold`/`autoResume`) is unchanged.
+
 ## [0.3.0] - 2026-09-02
 
 ### Added
