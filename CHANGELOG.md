@@ -4,6 +4,19 @@ All notable changes to this project are documented in this file. Format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); this project uses
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2026-09-04
+
+### Added
+
+- Review trigger toggles (global + per-project): re-review on push and
+  review on reviewer assignment, with per-project rows overriding globals.
+  Requires `@ddtcorex/dsh-maestro-config-lib@^0.1.6`. (#39)
+
+### Fixed
+
+- Make GitLab token, webhook secret and bot token editable in Settings.
+  (#38)
+
 ## [0.3.1] - 2026-09-03
 
 ### Removed
