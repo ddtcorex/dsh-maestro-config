@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.5.0] - 2026-09-13
+
+### Added
+
+- PIN session duration control in the Tunnel settings card (#43).
+
+### Changed
+
+- The Tunnel section now leads with Public access (#44).
+
+### Fixed
+
+- Declare row `inject` for DSH 0.1.5 (#42), and stop tracking `lib/` build
+  output (#41).
+
 All notable changes to this project are documented in this file. Format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); this project uses
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
