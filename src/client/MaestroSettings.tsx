@@ -1056,6 +1056,17 @@ function LanAccess({ proxyStatus, lanPin }: { proxyStatus: any; lanPin: any }) {
   if (!proxyStatus?.running) {
     return h('p', { style: { color: t.stateError as string, fontSize: 12, margin: '8px 0 0' } }, proxyStatus?.errorMessage ?? 'Proxy not running')
   }
+  if (urls.length === 0) {
+    // Without a LAN listener there is no LAN entry to advertise. Saying "no PIN
+    // needed" next to the reader's own reachable-but-public URL would promise
+    // access this card cannot deliver, so point at the setting instead.
+    return h(
+      'div',
+      null,
+      h('p', { style: captionStyle }, 'No LAN listener is configured — set a LAN port under Tunnel to expose one.'),
+      lanPin !== null ? h(LanPinRow as any, { lanPin }) : null,
+    )
+  }
   return h(
     'div',
     null,
