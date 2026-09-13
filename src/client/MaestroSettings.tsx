@@ -1153,7 +1153,6 @@ function PinSessionTtl({ hours, onSave }: { hours: number | undefined; onSave: (
           style: { width: 120 } as any,
         })
       : null,
-    h('p', { style: { ...captionStyle, margin: 0, textAlign: 'right' as const } }, 'Applies to the next login. Covers both the public tunnel and LAN access.'),
   )
 }
 
@@ -1184,7 +1183,10 @@ function PublicAccess({ status, pin, showPin, onRevealPin, onHidePin, onRotatePi
     h('p', { style: captionStyle }, 'Stays the same across tunnel and DSH restarts; use Rotate when you need a new PIN.'),
     h(SettingRow as any, {
       title: 'PIN session duration',
-      description: 'How long a browser stays signed in after entering the PIN.',
+      // The caption lives in the description column on purpose: a long caption
+      // inside the control column claims its intrinsic width (min-width: auto)
+      // and squeezes the title/description to a few characters per line.
+      description: 'How long a browser stays signed in after entering the PIN. Applies to the next login; covers the public tunnel and LAN access.',
       control: h(PinSessionTtl as any, { hours: pinTtlHours, onSave: onSavePinTtl }),
     }),
   )
