@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.5.1] - 2026-09-14
+
+### Fixed
+
+- **Opt the settings fields out of the iOS 16px field floor.** On touch screens
+  up to 1023px wide, `dsh-maestro-mobile` holds every text field at
+  `font-size: 16px !important` under `html[data-mobile-nav-ios]`, because iOS
+  WebKit magnifies the visual viewport for a focused field below 16px. That
+  floor also caught fields this panel never declared, so on an iPhone/iPad the
+  settings fields rendered 2-3px larger than the labels and helper text beside
+  them. The panel now restores plain inheritance for its own fields inside the
+  same predicate, with an id-level `:not(#…)` token that out-ranks the ten
+  `:not([type=…])` clauses of the floor; desktop and touch-Android are
+  untouched. (#46)
+
 ## [0.5.0] - 2026-09-13
 
 ### Added
