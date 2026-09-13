@@ -60,4 +60,15 @@ describe('settings section registration contract', () => {
     expect(live).toContain('PIN session duration')
     expect(read('pin-ttl.ts')).toContain('PIN_TTL_PRESETS')
   })
+
+  it('renders Public access above the LAN card', () => {
+    // The public tunnel is the entry most visitors arrive through, so its card
+    // leads; the LAN card stays directly below it.
+    const live = read('MaestroSettings.tsx')
+    const publicAt = live.indexOf("}, 'Public access')")
+    const lanAt = live.indexOf("}, 'Remote access — LAN')")
+    expect(publicAt).toBeGreaterThan(-1)
+    expect(lanAt).toBeGreaterThan(-1)
+    expect(publicAt).toBeLessThan(lanAt)
+  })
 })

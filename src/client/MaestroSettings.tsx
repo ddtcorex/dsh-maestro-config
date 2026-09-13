@@ -1688,8 +1688,8 @@ export function MaestroSettingsTab({ rpcCall, configRpcCall }: { rpcCall: any; c
             )
           : null,
         h('div', { style: { display: 'flex', gap: 8, flexWrap: 'wrap' as const, padding: '12px 0', borderBottom: `1px solid ${t.borderL2}` } }, status?.running ? h(Button as any, { variant: 'outline', size: 'md', disabled: busy, onClick: stopTunnel }, 'Stop tunnel') : h(Button as any, { variant: 'primary', size: 'md', disabled: busy, onClick: startTunnel }, 'Start tunnel')),
-        h('div', { style: { ...cardInsetStyle, marginTop: '12px' } }, h('div', { style: { fontSize: 13, fontWeight: 600, color: t.labelPrimary as string } }, 'Remote access — LAN'), h(LanAccess as any, { proxyStatus, lanPin: lanPinEnabled === null ? null : { enabled: lanPinEnabled, pin: lanPin, show: showLanPin, onShow: revealLanPin, onHide: () => setShowLanPin(false), onRotate: rotateLanPin, onToggle: toggleLanPin } })),
         h('div', { style: { ...cardInsetStyle, marginTop: '12px' } }, h('div', { style: { fontSize: 13, fontWeight: 600, color: t.labelPrimary as string } }, 'Public access'), h(PublicAccess as any, { status, pin, showPin, onRevealPin: revealPin, onHidePin: () => setShowPin(false), onRotatePin: rotatePin, pinTtlHours: config.pinSessionTtlHours, onSavePinTtl: (value: number) => saveField('pinSessionTtlHours', value) })),
+        h('div', { style: { ...cardInsetStyle, marginTop: '12px' } }, h('div', { style: { fontSize: 13, fontWeight: 600, color: t.labelPrimary as string } }, 'Remote access — LAN'), h(LanAccess as any, { proxyStatus, lanPin: lanPinEnabled === null ? null : { enabled: lanPinEnabled, pin: lanPin, show: showLanPin, onShow: revealLanPin, onHide: () => setShowLanPin(false), onRotate: rotateLanPin, onToggle: toggleLanPin } })),
       ),
     gitlab: h(
         'div',
