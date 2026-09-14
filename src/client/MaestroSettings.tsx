@@ -1371,6 +1371,12 @@ export function MaestroSettingsTab({ rpcCall, configRpcCall, supervisorRpcCall }
   const saveSupervisorCfg = async (patch: any) => {
     setError(null)
     setSupervisorCfg((prev: any) => ({ ...prev, ...patch }))
+    // Keep the effective-state view in step with an explicit write: without
+    // this the toggle would snap back to the plugin's last-reported value
+    // until the next status fetch.
+    if (typeof patch?.autoResumeEnabled === 'boolean') {
+      setSupervisorStatus((prev: any) => (prev ? { ...prev, autoResumeEnabled: patch.autoResumeEnabled } : prev))
+    }
     try {
       await cfgSet('supervisor', patch)
     } catch (e: any) {
@@ -1569,6 +1575,13 @@ export function MaestroSettingsTab({ rpcCall, configRpcCall, supervisorRpcCall }
   // so a write here would be shadowed. Only claimed when the supervisor
   // actually answered — an absent/unresponsive service keeps the toggle live.
   const autoResumePinned = supervisorStatus?.autoResumePinned === true
+  // When the plugin answers, its value is the EFFECTIVE one (store, env,
+  // supervisor file and defaults folded together). Showing the raw store value
+  // instead would render a fresh install's toggle as OFF while the documented
+  // default keeps auto-resume ON.
+  const autoResumeChecked = typeof supervisorStatus?.autoResumeEnabled === 'boolean'
+    ? supervisorStatus.autoResumeEnabled === true
+    : supervisorCfg.autoResumeEnabled === true
 
   // Nested tabs — unified pill bar with icons (maestro-design, matches dsh-maestro-jobs)
   const TABS: Array<{ id: string; label: string; icon: TabIcon }> = [
@@ -1647,9 +1660,9 @@ export function MaestroSettingsTab({ rpcCall, configRpcCall, supervisorRpcCall }
           title: 'Auto-resume sessions',
           description: autoResumePinned
             ? 'Locked: this install pins auto-resume through its Cordis plugin config, which outranks this store. Change it where the supervisor row is mounted, not here.'
-            : 'Automatically resume sessions interrupted by a DSH restart within the resume window.',
-          // Effective value from the plugin, not the (possibly shadowed) store value.
-          checked: autoResumePinned ? supervisorStatus?.autoResumeEnabled === true : supervisorCfg.autoResumeEnabled === true,
+            : 'Automatically resume sessions interrupted by a DSH restart within the resume window. Shown as the supervisor reports it — plugin config, environment, and defaults folded together.',
+          // Effective value from the plugin, not the (possibly shadowed) store.
+          checked: autoResumeChecked,
           onChange: (v: boolean) => saveSupervisorCfg({ autoResumeEnabled: v }),
           disabled: autoResumePinned,
         }),

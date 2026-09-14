@@ -107,8 +107,13 @@ describe('settings UI remediation pins', () => {
     expect(live).toContain("supervisorRpcCall('status'")
     expect(live).toContain('const autoResumePinned = supervisorStatus?.autoResumePinned === true')
     expect(live).toContain('disabled: autoResumePinned')
-    // The locked row shows the effective plugin value, not the shadowed store.
-    expect(live).toMatch(/checked:\s*autoResumePinned\s*\?\s*supervisorStatus\?\.autoResumeEnabled/)
+    // The row renders the EFFECTIVE value the plugin reports (store, env and
+    // defaults folded together) whenever it answers — a fresh install's
+    // documented default is ON, and a store-only read would wrongly show OFF.
+    expect(live).toContain('const autoResumeChecked = typeof supervisorStatus?.autoResumeEnabled')
+    expect(live).toContain('checked: autoResumeChecked')
+    // An explicit write keeps that view in step until the next status fetch.
+    expect(live).toMatch(/setSupervisorStatus\(\(prev: any\) => \(prev \? \{ \.\.\.prev, autoResumeEnabled/)
   })
 
   it('renders the LAN-PIN restart notice from the host requiresRestart flag', () => {
