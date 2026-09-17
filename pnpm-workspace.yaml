@@ -3,3 +3,6 @@ allowBuilds:
 minimumReleaseAge: 0
 packages:
   - '../dsh-maestro-config-lib'
+
+minimumReleaseAgeExclude:
+  - '@deepseek-ai/dsh-client-connection@0.1.6-alpha.2'
