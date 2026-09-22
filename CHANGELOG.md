@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.6.0] - 2026-09-22
+
+### Added
+
+- Guard tab speaks schema v2 with merged blacklist: per-rule
+  Default/Allow/Journal/Ask/Deny selectors grouped by boundary, ListEditor
+  rows, CommitField numbers, live status summary, Reset to defaults; the
+  standalone Blacklist pill folds in as an offline-scan section (#51).
+- `unset(domain, key)` endpoint on the service facade and generic RPC
+  channel, backed by lib.unset — first use: deleting dead keys (#51).
+
+### Fixed
+
+- Sort Maestro settings tabs after archived sessions (order block starts
+  at 26) (#53).
+- Hold iOS settings fields at the 16px floor instead of opting out (#50).
+
+### Changed
+
+- Follow `@ddtcorex/dsh-maestro-config-lib` to `^0.3.0` (unset support).
+
 ## [0.5.1] - 2026-09-14
 
 ### Fixed
