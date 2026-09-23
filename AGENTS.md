@@ -8,7 +8,7 @@ schema-driven Settings card later.
 ## Layout
 
 - `src/host/service.ts` — pure `createMaestroConfigService({ dshHome? })`, TDD target.
-- `src/host/index.ts` — Cordis apply(): provides `maestroConfig`, registers loopback RPC channel `/dsh-maestro-config` (`list|get|set`) inside `ctx.effect`.
+- `src/host/index.ts` — Cordis apply(): provides `maestroConfig`, registers the `/dsh-maestro-config` RPC channel (`list|get|set`) inside `ctx.effect`; reachability is loopback because the browser dials the local host, not something registration requests — `rpc.handle` takes exactly `(channel, handler)`.
 - `src/client/index.tsx` — Settings card: registers `settings.section` id `maestro-config`, data-driven over domains via the RPC channel.
 - `scripts/build-client.mjs` — wraps tsc CommonJS emit into the DSH browser loader (`lib/client.js`).
 - `tests/service.spec.ts` — service contract against tmpdir homes.
