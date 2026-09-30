@@ -23,7 +23,10 @@ schema-driven Settings card later.
 
 ## Branding — Shared Logo (Settings UI)
 
-Settings UI MUST reuse the shared Maestro mark from `dsh-maestro-dashboard`:
+Settings UI MUST reuse the Maestro mark declared in `src/client/components/BrandMark.tsx` — this file is the **workspace reference implementation** (it was copied from `dsh-maestro-dashboard`, which this plugin set no longer installs).
 
-- **Mark**: `M2 11 L5 4 L8 9 L11 4 L14 11` `stroke="currentColor" strokeWidth="1.6"` — source `packages/dsh-maestro-dashboard/src/client/components/BrandMark.tsx` (copied to `src/client/components/BrandMark.tsx` here for the Settings card — keep in sync).
-- **Badge**: `BrandBadge outer 28 size 16 radius 8` `data-maestro-logo` `background:#0A84FF` `color:#fff` `border:1px solid rgba(0,0,0,0.08)` `boxShadow:0 0 0 1px var(--dsw-alias-border-l1)` — same as Dashboard popup. Settings card header uses it; settings nav icon uses the same path as a `currentColor` mask (`stroke-width 1.6`) for the nav row. Never duplicate with a different path or background.
+- **Mark**: `MAESTRO_MARK_PATH` = `M2 11 L5 4 L8 9 L11 4 L14 11`, `MAESTRO_MARK_STROKE_WIDTH` = `1.6`, `MAESTRO_MARK_VIEWBOX` = `0 0 16 16`, `stroke="currentColor"`.
+- **Badge**: `BrandBadge({outer 28, size 16, radius 8})` `data-maestro-logo` `background:#0A84FF` `color:#fff` `border:1px solid rgba(0,0,0,0.08)` `boxShadow:0 0 0 1px var(--dsw-alias-border-l1)`. Its optional `style` prop merges over the tile so a call site can position the badge without copying its chrome. The Settings card header uses it; the settings-nav row uses `maestroMarkMaskUri()` — the same glyph as a `currentColor` mask. Never duplicate the path or use a different stroke width or background.
+- **Other packages still inline their own copy, and must.** Each declares its own `dsh.client` entry and builds its own `lib/client.js`, so one plugin's client module cannot import another's; `dsh-maestro-remote`'s copy is a host-side HTML string. That duplication is structural — do not attempt a cross-plugin import.
+- **Pinned** by `tests/brand-mark.spec.ts`: the constants here, and that neither `index.tsx` nor `MaestroSettings.tsx` holds a re-hardcoded literal.
+- The `MaestroSettings.tsx` `<style>` block overriding `[data-maestro-logo]` with `!important` is deliberate — it beats shell styles on the badge. `#0A84FF` legitimately appears there in CSS form, which is why the pin asserts on the JS inline style, not the bare hex.
